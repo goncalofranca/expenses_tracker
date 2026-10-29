@@ -6,7 +6,9 @@ import 'new_expense.dart';
 import 'expenses_chart.dart';
 
 class Expenses extends StatefulWidget {
-  const Expenses({super.key});
+  const Expenses({super.key, required this.onToggleTheme});
+
+  final void Function(bool isCurrentlyDark) onToggleTheme;
 
   @override
   State<Expenses> createState() => _ExpensesState();
@@ -66,7 +68,7 @@ class _ExpensesState extends State<Expenses> {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          duration: const Duration(seconds: 4 ),
+          duration: const Duration(seconds: 4),
           content: const Text('Despesa removida'),
           action: SnackBarAction(
             label: 'Anular',
@@ -104,6 +106,21 @@ class _ExpensesState extends State<Expenses> {
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         actions: [
+          IconButton(
+            tooltip: Theme.of(context).brightness == Brightness.dark
+                ? 'Ativar tema claro'
+                : 'Ativar tema escuro',
+            icon: Icon(
+              Theme.of(context).brightness == Brightness.dark
+                  ? Icons.light_mode_outlined
+                  : Icons.dark_mode_outlined,
+            ),
+            onPressed: () {
+              widget.onToggleTheme(
+                Theme.of(context).brightness == Brightness.dark,
+              );
+            },
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: IconButton.filledTonal(
@@ -215,7 +232,7 @@ class _EmptyExpenses extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
